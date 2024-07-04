@@ -1,7 +1,3 @@
-provider "aws" {
-    region = "us-east-2"
-}
-
 resource "aws_lb" "example" {
     name = "terraform-asg-example"
     load_balancer_type = "application"
@@ -126,19 +122,6 @@ resource "aws_autoscaling_group" "example" {
     }
 }
 
-# AWSが提供するデータソースからデフォルトVPC内のサブネットの情報を使える状態にする
-data "aws_subnets" "default" {
-    filter {
-        name = "vpc-id"
-        values = [data.aws_vpc.default.id]
-    }
-}
-
-# AWSが提供するデータソースからデフォルトVPCの情報を使える状態にする
-data "aws_vpc" "default" {
-    default = true
-}
-
 resource "aws_security_group" "instance" {
     name = "terraform-example-instance"
 
@@ -149,15 +132,4 @@ resource "aws_security_group" "instance" {
         protocol = "tcp"
         cidr_blocks = ["0.0.0.0/0"] # アクセス可能なIPアドレス範囲
     }
-}
-
-variable "server_port" {
-    description = "The port the server will use for HTTP requests"
-    type = number
-    default = 8080
-}
-
-output "alb_dns_name" {
-    value = aws_lb.example.dns_name
-    description = "The domain name of the load balancer"
 }
