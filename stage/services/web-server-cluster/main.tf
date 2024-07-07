@@ -88,11 +88,11 @@ resource "aws_launch_configuration" "example" {
     security_groups = [aws_security_group.instance.id]
 
     # 最初のインスタンス起動時にのみ実行されるスクリプト
-    user_data = <<-EOF
-        #!/bin/bash
-        echo "Hello, World" > index.html
-        nohup busybox httpd -f -p ${var.server_port} &
-    EOF
+    user_data = templatefile("user-data.sh", {
+        server_port = var.server_port
+        db_address = data.terraform_remote_state.db.outputs.address
+        db_port = data.terraform_remote_state.db.outputs.port
+    })
 
     # ASGからの参照を失わないように変更を適用する
     lifecycle {
@@ -112,8 +112,8 @@ resource "aws_autoscaling_group" "example" {
     # LBのターゲットグループのヘルスチェック結果を使い，unhealthyな場合は自動でインスタンスを置き換える
     health_check_type = "ELB"
 
-    min_size = 0
-    max_size = 0
+    min_size = 2
+    max_size = 10
 
     tag {
         key = "Name"

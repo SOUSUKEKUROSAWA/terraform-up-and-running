@@ -10,3 +10,14 @@ data "aws_subnets" "default" {
 data "aws_vpc" "default" {
     default = true
 }
+
+# RDSのステートファイル上のデータ（出力変数など）を使える状態にする
+data "terraform_remote_state" "db" {
+    backend = "s3"
+
+    config = {
+        bucket = "terraform-up-and-running-backend"
+        key = "stage/data-stores/mysql/terraform.tfstate"
+        region = "us-east-2"
+    }
+}
