@@ -10,3 +10,17 @@ module "users" {
     count = length(var.user_names)
     user_name = "module.${var.user_names[count.index]}"
 }
+
+# for_eachを使って同じことをする
+# -- countと違ってマップとして出力されるため，中間リソースの削除が意図通り行える
+resource "aws_iam_user" "example_foreach" {
+    for_each = toset(var.user_names) # リソースが対象の場合，for_eachは集合（set）かマップしか対サポートしていないため集合に変換
+    name = "foreach.${each.value}"
+}
+
+module "users_foreach" {
+    source = "github.com/SOUSUKEKUROSAWA/terraform-up-and-running-module//landing-zone/iam-user?ref=v0.0.2"
+
+    for_each = toset(var.user_names)
+    user_name = "module.foreach.${each.value}"
+}
