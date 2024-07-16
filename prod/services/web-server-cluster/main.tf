@@ -1,6 +1,6 @@
 module "webserver_cluster" {
     # タグでバージョン指定してモジュールのコードをダウンロード
-    source = "github.com/SOUSUKEKUROSAWA/terraform-up-and-running-module//services/web-server-cluster?ref=v0.0.1"
+    source = "github.com/SOUSUKEKUROSAWA/terraform-up-and-running-module//services/web-server-cluster?ref=v0.0.3"
 
     cluster_name = "webservers-prod"
     db_remote_state_bucket = "terraform-up-and-running-backend"
@@ -8,6 +8,11 @@ module "webserver_cluster" {
     instance_type = "t2.micro" # m4.large などを使いたいが，練習用なので低コストなインスタンスタイプを選択
     min_size = 2
     max_size = 10
+
+    custom_tags = {
+        Owner = "team-foo"
+        DeployedBy = "terraform"
+    }
 }
 
 # 時間に応じてキャパシティを変化させるスケジュールを別途追加（Stage環境では不要）
