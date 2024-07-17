@@ -1,6 +1,6 @@
 module "webserver_cluster" {
     # タグでバージョン指定してモジュールのコードをダウンロード
-    source = "github.com/SOUSUKEKUROSAWA/terraform-up-and-running-module//services/web-server-cluster?ref=v0.0.1"
+    source = "github.com/SOUSUKEKUROSAWA/terraform-up-and-running-module//services/web-server-cluster?ref=v0.0.5"
 
     cluster_name = "webservers-stage"
     db_remote_state_bucket = "terraform-up-and-running-backend"
@@ -8,6 +8,8 @@ module "webserver_cluster" {
     instance_type = "t2.micro"
     min_size = 2
     max_size = 2
+
+    enable_autoscaling = false
 }
 
 # テスト用にStage環境のみ追加でポートをあける
