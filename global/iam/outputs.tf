@@ -39,3 +39,14 @@ output "neo_cloudwatch_policy_arn" {
         aws_iam_user_policy_attachment.neo_cloudwatch_read_only[*].policy_arn
     ))
 }
+
+# if文字列ディレクティブを使った条件分岐
+# -- 「~」は前後のスペースの削除を意味する
+# -- 後ろにユーザー名が続く場合のみ「, 」を付ける
+output "for_directive_index_if_else_strip" {
+    value = <<EOF
+%{~ for i, name in var.user_names ~}
+${name}%{ if i < length(var.user_names) - 1 }, %{ else }.%{ endif }
+%{~ endfor ~}
+EOF
+}
