@@ -1,6 +1,8 @@
 module "webserver_cluster" {
     # タグでバージョン指定してモジュールのコードをダウンロード
-    source = "github.com/SOUSUKEKUROSAWA/terraform-up-and-running-module//services/web-server-cluster?ref=v0.0.5"
+    source = "github.com/SOUSUKEKUROSAWA/terraform-up-and-running-module//services/web-server-cluster?ref=v0.0.9"
+
+    server_text = "New Server text"
 
     cluster_name = "webservers-stage"
     db_remote_state_bucket = "terraform-up-and-running-backend"
