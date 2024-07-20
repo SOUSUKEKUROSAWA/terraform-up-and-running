@@ -1,6 +1,6 @@
 module "webserver_cluster" {
     # タグでバージョン指定してモジュールのコードをダウンロード
-    source = "github.com/SOUSUKEKUROSAWA/terraform-up-and-running-module//services/web-server-cluster?ref=v0.0.9"
+    source = "github.com/SOUSUKEKUROSAWA/terraform-up-and-running-module//services/web-server-cluster?ref=v0.0.10"
 
     server_text = "New Server text"
 
