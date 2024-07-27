@@ -1,10 +1,7 @@
-resource "aws_db_instance" "example" {
-    identifier_prefix = "terraform-up-and-running"
-    engine = "mysql"
-    allocated_storage = 10
-    instance_class = "db.t3.micro" # 2024/06よりdb.t2はサポートされなくなったためt3を選択
-    skip_final_snapshot = true
-    db_name = "example_database"
-    username = local.db_credentials.username
-    password = local.db_credentials.password
+module "mysql" {
+    source = "github.com/SOUSUKEKUROSAWA/terraform-up-and-running-module//data-stores/mysql?ref=v0.0.12"
+
+    db_name = "stage_db"
+    db_username = local.db_credentials.username
+    db_password = local.db_credentials.password
 }

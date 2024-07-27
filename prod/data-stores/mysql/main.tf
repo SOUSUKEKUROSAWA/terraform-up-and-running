@@ -1,10 +1,25 @@
-resource "aws_db_instance" "example" {
-    identifier_prefix = "terraform-up-and-running"
-    engine = "mysql"
-    allocated_storage = 10
-    instance_class = "db.t3.micro" # 2024/06よりdb.t2はサポートされなくなったためt3を選択
-    skip_final_snapshot = true
-    db_name = "example_database"
-    username = local.db_credentials.username
-    password = local.db_credentials.password
+module "mysql_primary" {
+    source = "github.com/SOUSUKEKUROSAWA/terraform-up-and-running-module//data-stores/mysql?ref=v0.0.12"
+
+    providers = {
+        aws = aws.primary # ここのawsというプロバイダのLOCAL_NAMEがモジュールのプロバイダのローカル名と一致している必要がある
+    }
+
+    db_name = "prod_db"
+    db_username = local.db_credentials.username
+    db_password = local.db_credentials.password
+
+    # レプリケーションをサポートするために有効にする
+    backup_retention_period = 1
+}
+
+module "mysql_replica" {
+    source = "github.com/SOUSUKEKUROSAWA/terraform-up-and-running-module//data-stores/mysql?ref=v0.0.12"
+
+    providers = {
+        aws = aws.replica
+    }
+
+    # プライマリのレプリカとして設定
+    replicate_source_db = module.mysql_primary.arn
 }
